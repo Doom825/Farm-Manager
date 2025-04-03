@@ -12,6 +12,12 @@ import Home from './pages/Home';
 import Farm from './pages/Farm';
 import Weather from './pages/Weather';
 
+// importing myFarm pages. 
+// TODO: Please uncomment and delete this line after adding info to myFarm
+// import Crops from './pages/myFarm/Crops';
+// import Soils from './pages/myFarm/Soils';
+import Journal from './pages/myFarm/CropJournal';
+
 export default function App() {
 
   return (
@@ -23,6 +29,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/farm" element={<Farm />} />
+        <Route path="/farm/journal" element={< Journal />} />
         <Route path="/weather" element={<Weather />} />
       </Routes>
 
