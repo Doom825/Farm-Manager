@@ -5,7 +5,7 @@ import './App.css'
 
 import Nav from './components/NavTabs';
 // import Header from './components/Header';
-// import Footer from './components/Footer';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 
 export default function App() {
@@ -14,7 +14,8 @@ export default function App() {
     <Router>
       {/* <Header /> */}
       <Nav /> 
-      <h1>App</h1>
+      <h2>Welcome to your farm!</h2>
+      <h3>Managing your farm in one place</h3>
       {/* <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/About" element={<About />} />
@@ -23,7 +24,7 @@ export default function App() {
         <Route path="/Contact" element={<Contact />} />
       </Routes> */}
 
-      {/* <Footer /> */}
+      <Footer />
     </Router>
   );
 };
