@@ -1,32 +1,41 @@
-// Import express to run server app
 import express from 'express';
-// Import these packages to create auth
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import cors from 'cors';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes';
+import sequelize from './config/db';
 
 dotenv.config();
 
-const app = express();  // Create an Express application
-const PORT = process.env.PORT || 3001;  // Define the port for the server to listen on
+const app = express();
+app.use(bodyParser.json());
 
-// Serves static files from the client's dist folder, typically for a built React application
-app.use(express.static('../client/dist'));
+const PORT = process.env.PORT || 5000;
 
-app.use(express.json());  // Middleware to parse JSON request bodies
+// turn on server-routes
+app.use('/api/auth', authRoutes);
 
-app.use(cors()); // Allows you to control which origins are allowed to access your resources. More info. https://www.npmjs.com/package/cors 
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('User Database connected!');
+    await sequelize.sync();
+    app.listen(process.env.PORT || 5000, () => 
+    console.log('Server running on port 5000'));
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
+};
 
-app.use(routes);  // Use the imported routes for handling API endpoints
+startServer();
 
-const 
-
-app.get('/', (_req, res) => {
-  res.send("Welcome to the Farm Management from the Backend side... the dark side!")
-});
-// Sync the Sequelize models with the database
-app.listen(PORT, () => {  // Start the server and listen on the defined port
-    console.log(`Server is listening at http://localhost:${PORT}`);  // Log a message when the server starts
+// turn on connection to db and server
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is listening on http://localhost:${PORT}`);
   });
+});
 
+app.listen(PORT, () => {  // 
+// Start the server and listen on the defined port
+  console.log(`Server is listening at http://localhost:${PORT}`);  // Log a message when the server starts
+});

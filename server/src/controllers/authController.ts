@@ -1,0 +1,61 @@
+import { Request, Response } from "express";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/User';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// Sign-Up 
+export const signUp = async (req: Request, res: Response) => {
+    const { username, email, password } = req.body;
+    try {
+        const userExists = await User.findOne({ 
+            where: { email }
+        });
+        if (userExists) {
+            return res.status(400).json({ message: "Farm's email already in use." });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = await User.create({
+            username,
+            email,
+            password: hashedPassword,
+        });
+
+        res.status(201).json({ message: "Farmer user created successfully!", userId: newUser.id 
+        });  
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error'});
+    }
+};
+
+// Log-In
+export const logIn = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    try {
+        // Is the right user?
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(400).json({ message: 'Incorrect email' });
+        }
+        // Is the correct password?
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Incorrect password'})
+        }
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+           expiresIn: process.env.JWT_EXPIRE, 
+        });
+
+        res.json({ token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error'});
+    }
+};
