@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  max-width: 580px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -16,6 +16,11 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+body {
+  background-image: url('assets/CornField.png');
+  background-size: cover; 
 }
 
 @keyframes logo-spin {

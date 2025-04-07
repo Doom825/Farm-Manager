@@ -27,6 +27,8 @@ a {
   font-weight: 500;
   color: #f0a202;
   text-decoration: inherit;
+  transition: border-color 0.25s, text-shadow 0.50s;
+  margin: 1.5em; 
 }
 a:hover {
   color: #D96C06;
