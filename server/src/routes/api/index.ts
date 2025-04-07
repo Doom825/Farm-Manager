@@ -1,9 +1,8 @@
-import { tipRouter } from './tip-routes.js';
-import { feedbackRouter } from './feedback-routes.js';
-import express from 'express';
-const router = express.Router();
+import { Router } from "express";
+import profileRouter from './profileRoutes.js';
 
-router.use('/tips', tipRouter);
-router.use('/feedback', feedbackRouter);
+const router = Router();
+
+router.use('/profiles', profileRouter);
 
 export default router;

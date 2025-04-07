@@ -24,6 +24,9 @@ export default function NavTabs() {
               <Link to='/Weather'>
                 Weather
               </Link>
+              <Link to='/Signup'>
+                Sign Up
+              </Link>
               <Link to='/Login'>
                 Log In
               </Link>

@@ -1,21 +1,41 @@
-const forceDatabaseRefresh = false;  // Flag to control whether to force a database refresh on server start
-
 import express from 'express';
-import sequelize from './config/connection.js'; // Import the initialized Sequelize instance
-import routes from './routes/index.js';  // Import the routes for handling different endpoints
+import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes';
+import sequelize from './config/db';
 
-const app = express();  // Create an Express application
-const PORT = process.env.PORT || 3001;  // Define the port for the server to listen on
+dotenv.config();
 
-// Serves static files from the client's dist folder, typically for a built React application
-app.use(express.static('../client/dist'));
+const app = express();
+app.use(bodyParser.json());
 
-app.use(express.json());  // Middleware to parse JSON request bodies
-app.use(routes);  // Use the imported routes for handling API endpoints
+const PORT = process.env.PORT || 5000;
 
-// Sync the Sequelize models with the database
-sequelize.sync({ force: forceDatabaseRefresh }).then(() => {
-  app.listen(PORT, () => {  // Start the server and listen on the defined port
-    console.log(`Server is listening on port ${PORT}`);  // Log a message when the server starts
+// turn on server-routes
+app.use('/api/auth', authRoutes);
+
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('User Database connected!');
+    await sequelize.sync();
+    app.listen(process.env.PORT || 5000, () => 
+    console.log('Server running on port 5000'));
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  }
+};
+
+startServer();
+
+// turn on connection to db and server
+sequelize.sync().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is listening on http://localhost:${PORT}`);
   });
+});
+
+app.listen(PORT, () => {  // 
+// Start the server and listen on the defined port
+  console.log(`Server is listening at http://localhost:${PORT}`);  // Log a message when the server starts
 });

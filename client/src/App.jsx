@@ -1,3 +1,4 @@
+import React from 'react';
 // import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -7,6 +8,8 @@ import './App.css'
 import Nav from './components/NavTabs';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import SignUp from './components/SignUp';
+import LogIn from './components/LogIn'; 
 //importing pages
 import Home from './pages/Home';
 import Farm from './pages/Farm';
@@ -31,6 +34,8 @@ export default function App() {
         <Route path="/farm" element={<Farm />} />
         <Route path="/farm/journal" element={< Journal />} />
         <Route path="/weather" element={<Weather />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<LogIn />} />
       </Routes>
 
       <Footer />
