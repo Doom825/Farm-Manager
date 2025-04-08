@@ -52,7 +52,6 @@ export const logIn = async (req: Request, res: Response) => {
         const token = jwt.sign({ userId: user.id },  process.env.JWT_SECRET || '', {
             expiresIn: '1h' 
         });
-        // do an interface above, convert userId: string
 
         return res.json({ token });
     } catch (error) {

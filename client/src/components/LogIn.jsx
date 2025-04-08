@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { logInUser } from '../utils/api';
+import { logInUser } from '../utils/userApi';
 
 const LogIn = () => {
     const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ const LogIn = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit">Log In</button>
+            <button onClick={handleSubmit}>Log In</button>
         </form>
     );
 };

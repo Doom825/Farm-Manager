@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signUpUser } from '../utils/api';
+import { signUpUser } from '../utils/userApi';
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -36,7 +36,7 @@ const SignUp = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button type='submit'>Sign Up</button>
+            <button onClick={handleSubmit}>Sign Up</button>
         </form>
     );
 };
