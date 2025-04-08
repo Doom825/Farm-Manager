@@ -1,11 +1,12 @@
 DROP DATABASE IF EXISTS user_db;
-CREATE DATABASE user_db;
+DROP DATABASE IF EXISTS farmer_db;
+CREATE DATABASE farmer_db;
 
-\c user_db;
+\c farmer_db;
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL
+    user_name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE crops (
@@ -22,12 +23,12 @@ CREATE TABLE user_crop (
 );
 
 CREATE TABLE cropJournal (
-  id SERIAL PRIMARY KEY,
-  title VARCHAR,
-  body TEXT,
-  user_id INT,
-  crop_id INT,
-  entry_date timestamp,
-  CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-  CONSTRAINT FOREIGN KEY (crop_id) REFERENCES crops(id) ON DELETE SET NULL
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),  -- Specify length for VARCHAR
+    body TEXT,
+    user_id INT,
+    crop_id INT,
+    entry_date TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    FOREIGN KEY (crop_id) REFERENCES crops(crop_id) ON DELETE SET NULL
 );
