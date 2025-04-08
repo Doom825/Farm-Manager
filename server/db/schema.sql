@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS user_db;
 DROP DATABASE IF EXISTS farmer_db;
 CREATE DATABASE farmer_db;
 
