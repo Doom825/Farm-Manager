@@ -3,11 +3,13 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import sequelize from './config/connection';
+import cropRoutes from './routes/api/cropRoutes';
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use('/api', cropRoutes)
 
 const PORT = process.env.PORT || 5000;
 
