@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
-import sequelize from './config/db';
+import sequelize from './config/connection';
 
 dotenv.config();
 
@@ -33,9 +33,4 @@ sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`);
   });
-});
-
-app.listen(PORT, () => {  // 
-// Start the server and listen on the defined port
-  console.log(`Server is listening at http://localhost:${PORT}`);  // Log a message when the server starts
 });
