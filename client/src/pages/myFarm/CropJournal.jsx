@@ -22,6 +22,18 @@ export default function Journal() {
         case 'seedSupplier':
             setSeedSupplier(value);
             break;
+        case 'plantDate':
+            setPlantDate(value);
+            break;
+        case 'germinationDate':
+            setGerminationDate(value);
+            break;
+        case 'maturityDate':
+            setMaturityDate(value);
+            break;  
+        case 'growth':
+            setGrowth(value);
+            break;
         default:
             break;
         }
