@@ -3,7 +3,7 @@ import cropService from '../../service/cropService.js';
 
 const router = express.Router();
 
-router.get('/plants', async (_req, res) => {
+router.get('/crops', async (_req, res) => {
   try {
     const crops = await cropService.getAllCrops();
     res.json(crops);

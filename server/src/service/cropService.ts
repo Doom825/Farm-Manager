@@ -9,8 +9,8 @@ class cropService {
   private getHeaders() {
     return {
       'Content-Type': 'application/json',
-      'key-id': PERMA_KEY_ID,
-      'key-secret': PERMA_KEY_SECRET,
+      'x-permapeople-key-id': PERMA_KEY_ID,
+      'x-permapeople-key-secret': PERMA_KEY_SECRET,
     };
   }
 
