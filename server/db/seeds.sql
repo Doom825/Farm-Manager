@@ -1,11 +1,11 @@
-INSERT INTO users (user_name)
-VALUES ('ctbambrose'),
-       ('xX_Farmer_Xx'),
-       ('jedfalk'),
-       ('Doom825'),
-       ('I-0110');
+INSERT INTO users (user_name, user_password, email)
+VALUES ('ctbambrose', 'TestPass', 'test1@test.com'),
+       ('xX_Farmer_Xx', 'TestPass', 'test2@test.com'),
+       ('jedfalk', 'TestPass', 'test3@test.com'),
+       ('Doom825', 'TestPass', 'test4@test.com'),
+       ('I-0110', 'TestPass', 'test5@test.com');
 
-INSERT INTO crops (crop_name)
+INSERT INTO crops (crop_name, scientific_name)
 VALUES ('Tomato'),
        ('Cabbage'),
        ('Carrot'),
