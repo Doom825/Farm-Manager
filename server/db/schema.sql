@@ -5,7 +5,9 @@ CREATE DATABASE farmer_db;
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    user_name VARCHAR(255) UNIQUE NOT NULL
+    user_name VARCHAR(255) UNIQUE NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE crops (
@@ -23,7 +25,7 @@ CREATE TABLE user_crop (
 
 CREATE TABLE cropJournal (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255),  -- Specify length for VARCHAR
+    title VARCHAR(255),
     body TEXT,
     user_id INT,
     crop_id INT,
