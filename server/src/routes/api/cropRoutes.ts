@@ -1,18 +1,25 @@
-import {Router} from 'express';
+import express from 'express';
 import cropService from '../../service/cropService.js';
 
-const router = Router();
+const router = express.Router();
 
 router.get('/', async (_req, res) => {
-  console.log('Request received at /api/crops');
-
   try {
     const crops = await cropService.getAllCrops();
-    console.log('Crops fetched:', crops.length);
-    res.json(crops);
-  } catch (err) {
-    console.error('Error fetching crops:', err); 
-    res.status(500).json({ error: 'Failed to fetch crops' });
+    
+    // Check if crops is a CropResponse object
+    if (Array.isArray(crops)) {
+      console.log('Crops fetched:', crops.length);
+      res.json(crops);
+    } else if (crops.data) {
+      console.log('Crops fetched:', crops.data.length);
+      res.json(crops.data);  // Access the data array from the CropResponse
+    } else {
+      res.status(400).send('Invalid crop data format.');
+    }
+  } catch (error) {
+    console.error('Error fetching crops:', error);
+    res.status(500).send('Error fetching crops');
   }
 });
 
