@@ -33,22 +33,22 @@ class cropService {
   }
 
   // Optional: get a specific plant by ID
-  async getCropById(id: string): Promise<any> {
-    try {
-      const response = await fetch(`${PERMA_BASE_URL}/plants/${id}`, {
-        headers: this.getHeaders(),
-      });
+  // async getCropById(id: string): Promise<any> {
+  //   try {
+  //     const response = await fetch(`${PERMA_BASE_URL}/plants/${id}`, {
+  //       headers: this.getHeaders(),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`Failed to fetch crop with ID ${id}: ${response.statusText}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to fetch crop with ID ${id}: ${response.statusText}`);
+  //     }
 
-      return await response.json();
-    } catch (error) {
-      console.error('Error in getCropById:', error);
-      throw error;
-    }
-  }
+  //     return await response.json();
+  //   } catch (error) {
+  //     console.error('Error in getCropById:', error);
+  //     throw error;
+  //   }
+  // }
 }
 
 export default new cropService();
