@@ -1,5 +1,5 @@
 import express from 'express';
-import { signUp, logIn } from '../controllers/authController';
+import { signUp, logIn } from '../controllers/authController.js';
 
 // dotenv.config();
 

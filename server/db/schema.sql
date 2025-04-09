@@ -12,7 +12,8 @@ CREATE TABLE users (
 
 CREATE TABLE crops (
     crop_id SERIAL PRIMARY KEY,
-    crop_name VARCHAR(255) UNIQUE NOT NULL
+    crop_name VARCHAR(255) UNIQUE NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE user_crop (
