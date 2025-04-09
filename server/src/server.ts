@@ -1,9 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes';
-import sequelize from './config/connection';
-import cropRoutes from './routes/api/cropRoutes';
+import authRoutes from './routes/authRoutes.js';
+import { sequelize } from './config/connection.js';
+import cropRoutes from './routes/api/cropRoutes.js';
+import cropService from './service/cropService.js';
 
 dotenv.config();
 
@@ -21,14 +22,16 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('User Database connected!');
     await sequelize.sync();
+    await cropService.fetchAndSaveCrops();
 
     app.listen(PORT, () => {
-      console.log(`🌱 Server is listening on http://localhost:${PORT}`);
+      console.log(`Server is listening on http://localhost:${PORT}`);
     });
 
   } catch (error) {
-    console.error('❌ Error connecting to the database:', error);
+    console.error('Error connecting to the database:', error);
   }
 };
+
 
 startServer();
