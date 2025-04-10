@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import Crop from '../models/Crop.js';
+import CropJournal from '../models/CropJournal.js'; 
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ class CropService {
     };
   }
 
-  // 1. Get crops from API
+  // Get crops from API
   async getAllCrops(): Promise<any> {
     try {
       const response = await fetch(`${PERMA_BASE_URL}/plants`, {
@@ -35,30 +36,30 @@ class CropService {
     }
   }
 
-  // 2. Fetch and save to DB
+  // Fetch and save to DB
   async fetchAndSaveCrops(): Promise<void> {
     try {
       const response = await this.getAllCrops(); // Fetch the crop data
       console.log('API Response:', JSON.stringify(response, null, 2));  // Log the full response object
-      
+
       // Extract crops data from 'plants' array
       const crops = Array.isArray(response.plants) ? response.plants : [response.plants];  // Access 'plants' array
-      
+
       if (crops.length === 0) {
         console.log('No crops to save.');
         return;
       }
-  
+
       // Loop through each crop and save it to the database
       for (const crop of crops) {
         const { id, name, slug } = crop;
-        
+
         if (!id || !name || !slug) continue; // Skip if crop does not have these essential properties
-  
+
         // Check if crop already exists in the database
         const existing = await Crop.findOne({ where: { crop_id: id } });
         if (existing) continue;  // Skip if crop already exists
-  
+
         // Save new crop to the database
         await Crop.create({
           crop_id: id,
@@ -66,10 +67,29 @@ class CropService {
           slug: slug,
         });
       }
-  
+
       console.log('✅ Crops successfully saved to the database.');
     } catch (error) {
       console.error('❌ Error saving crops to database:', error);
+    }
+  }
+
+  // Get crops by the user
+  async getCropsByUser(userId: number) {
+    try {
+      const crops = await Crop.findAll({
+        include: [
+          {
+            model: CropJournal,
+            where: { user_id: userId },  // Ensure we filter by user
+            required: true,  // Only get crops that are linked to this user
+          },
+        ],
+      });
+      return crops;
+    } catch (error) {
+      console.error('Error fetching crops by user:', error);
+      throw error;
     }
   }
 }
