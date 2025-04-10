@@ -10,9 +10,11 @@ const SignUp = () => {
         e.preventDefault();
         try { 
             const data = await signUpUser(username, email, password);
-            alert(data.message);
+            console.log("Sign up success:", data);
+            alert(data.message || "Sign up successful!");
         } catch (error) {
-            alert(error);
+            console.error("Sign up error:", error);
+            alert("Sign up failed. Please try again.");
         }
     };
 
