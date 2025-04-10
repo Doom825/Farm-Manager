@@ -12,11 +12,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --mint-green: #cce3de; //background color
-  --jasmine: #f3d37a; // background for forms
-  --gamboge: #f0a202; // background buttons 
-  --cocoa-brown: #D96C06; //hover
-  --sienna: #8f2d0c; // text color
 }
 *{
   background-color: #cce3de;
