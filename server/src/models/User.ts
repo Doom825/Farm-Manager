@@ -4,66 +4,61 @@ import {
     InferAttributes,
     InferCreationAttributes,
     CreationOptional,
-} from 'sequelize';
-import { sequelize } from '../config/connection.js';
-import bcrypt from 'bcrypt';
-
-class User extends Model<
-    InferAttributes<User>,
-    InferCreationAttributes<User>
-> {
+    Association,
+    BelongsToManyAddAssociationMixin,
+  } from 'sequelize';
+  import { sequelize } from '../config/connection.js';
+  import Crop from './Crop.js';
+  import CropJournal from './CropJournal.js';
+  
+  class User extends Model<
+    InferAttributes<User, { omit: 'Crops' | 'CropJournals' }>,
+    InferCreationAttributes<User, { omit: 'Crops' | 'CropJournals' }>
+  > {
     declare user_id: CreationOptional<number>;
     declare user_name: string;
     declare email: string;
     declare user_password: string;
-
-    //method to check password
-    async checkPassword(password: string): Promise<boolean> {
-        return await bcrypt.compare(password, this.user_password);
-    }
-}
-
-User.init(
+  
+    // Associations
+    declare Crops?: Crop[];
+    declare CropJournals?: CropJournal[];
+  
+    declare addCrop: BelongsToManyAddAssociationMixin<Crop, number>;
+  
+    declare static associations: {
+      Crops: Association<User, Crop>;
+      CropJournals: Association<User, CropJournal>;
+    };
+  }
+  console.log(User.rawAttributes);
+  User.init(
     {
-        user_id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        user_name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-            validate: {
-                isEmail: true,
-            },
-        },
-        user_password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
+      user_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      user_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      user_password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+},
+    {
+      sequelize,
+      modelName: 'User',
+      tableName: 'users',
+      timestamps: false, // This automatically includes createdAt & updatedAt
     },
-    {
-        sequelize,
-        modelName: 'User',
-        tableName: 'users',
-        timestamps: false, // Disable Sequelize's automatic createdAt and updatedAt
-        hooks: {
-            // ✅ Automatically hash password before save
-            beforeCreate: async (user: User) => {
-                user.user_password = await bcrypt.hash(user.user_password, 10);
-            },
-            beforeUpdate: async (user: User) => {
-                if (user.changed('user_password')) {
-                    user.user_password = await bcrypt.hash(user.user_password, 10);
-                }
-            },
-        },
-    }
-);
-
-export default User;
+  );
+  
+  export default User;
+  
