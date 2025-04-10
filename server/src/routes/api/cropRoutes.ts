@@ -23,4 +23,17 @@ router.get('/', async (_req, res) => {
   }
 });
 
+// New route to get crops for a specific user
+router.get('/user/:userId', async (req, res) => {
+  try {
+    // Convert the userId from string to number
+    const userId = parseInt(req.params.userId, 10); 
+    const crops = await cropService.getCropsByUser(userId);
+    res.json(crops);
+  } catch (error) {
+    console.error('Error fetching crops:', error);
+    res.status(500).json({ error: 'Failed to fetch crops for this user.' });
+  }
+});
+
 export default router;

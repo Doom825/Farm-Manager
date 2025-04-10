@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../config/connection.js'; // ensure you're exporting `sequelize` properly
+import CropJournal from './CropJournal.js';
 
 interface CropAttributes {
   crop_id: number;
@@ -38,5 +39,9 @@ Crop.init(
     timestamps: false,
   }
 );
+
+// Associations
+Crop.hasMany(CropJournal, { foreignKey: 'crop_id' });
+CropJournal.belongsTo(Crop, { foreignKey: 'crop_id' });
 
 export default Crop;

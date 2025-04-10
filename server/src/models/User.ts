@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from '../config/connection.js';
+import CropJournal from "./CropJournal.js";
 
 // interfaces to create user table/db 
 interface UserAttributes {
@@ -45,7 +46,12 @@ User.init(
     {
         sequelize,
         tableName: 'users',
+        modelName: 'User',
     }
 );
+
+// Associations
+User.hasMany(CropJournal, { foreignKey: 'user_id' });
+CropJournal.belongsTo(User, { foreignKey: 'user_id' });
 
 export default User;
