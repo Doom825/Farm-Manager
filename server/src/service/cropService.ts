@@ -100,6 +100,21 @@ class CropService {
     }
   }
   
+
+  async getAllCropNames(): Promise<any> {
+    try {
+      const crops = await Crop.findAll({
+        attributes: ['crop_name'], // Only retrieve the crop_name field
+      });
+      
+      return crops.map(crop => crop.crop_name); // Return an array of crop names
+    } catch (error) {
+      console.error('Error fetching crop names:', error);
+      throw error;
+    }
+  }
+
+
   //add crop to a user's journal
   async addCropForUser(userId: number, cropId: number) {
     try {
