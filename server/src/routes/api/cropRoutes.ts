@@ -1,5 +1,6 @@
 import express from 'express';
 import cropService from '../../service/cropService.js';
+import Crop from '../../models/Crop.js';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.get('/', async (_req, res) => {
   }
 });
 
-// New route to get crops for a specific user
+// route to get crops for a specific user
 router.get('/user/:userId', async (req, res) => {
   try {
     // Convert the userId from string to number
@@ -42,6 +43,22 @@ router.get('/user/:userId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching crops:', error);
     return res.status(500).json({ error: 'Failed to fetch crops for this user.' });
+  }
+});
+
+// Endpoint to fetch crop_id by crop_name
+router.get('/id/:cropName', async (req, res) => {
+  const { cropName } = req.params;
+  try {
+    const crop = await Crop.findOne({ where: { crop_name: cropName } });
+    if (crop) {
+      res.json({ crop_id: crop.crop_id });
+    } else {
+      res.status(404).json({ message: 'Crop not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching crop by name:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

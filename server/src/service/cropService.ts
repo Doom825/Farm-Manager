@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import db from '../models/index.js';
-const { Crop, User  } = db;
+import db from '../models/index.js';  // Ensure this points to your models folder
+const { Crop, User, UserCrop} = db;  // Include CropJournal
 
 dotenv.config();
 
@@ -99,7 +99,6 @@ class CropService {
       throw err;
     }
   }
-  
 
   async getAllCropNames(): Promise<any> {
     try {
@@ -114,21 +113,33 @@ class CropService {
     }
   }
 
-
-  //add crop to a user's journal
+  // Add crop to a user's journal
   async addCropForUser(userId: number, cropId: number) {
     try {
-      const user = await User.findByPk(userId);
-      const crop = await Crop.findByPk(cropId);
-  
-      if (!user || !crop) {
-        throw new Error('User or Crop not found');
+      // Check if user exists
+      const userExists = await User.findOne({ where: { user_id: userId } });
+      if (!userExists) {
+        throw new Error('User not found');
       }
   
-      // Use the 'addCrop' mixin provided by Sequelize
-      await user.addCrop(crop);
+      // Check if crop already exists for the user
+      const existingUserCrop = await UserCrop.findOne({
+        where: {
+          user_id: userId,
+          crop_id: cropId,
+        },
+      });
   
-      // Return the updated list of crops
+      if (!existingUserCrop) {
+        // Proceed to add crop to user
+        await UserCrop.create({
+          user_id: userId,
+          crop_id: cropId,
+          entry_date: new Date(), // Or other relevant fields
+        });
+      }
+  
+      // Return updated list of crops for the user
       const updatedCrops = await this.getCropsByUser(userId);
       return updatedCrops;
     } catch (err) {
@@ -136,6 +147,7 @@ class CropService {
       throw err;
     }
   }
+  
 }
 
 export default new CropService();
