@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import db from '../models/index.js';
-const { Crop, CropJournal, User  } = db;
+const { Crop, User  } = db;
 
 dotenv.config();
 
@@ -77,27 +77,23 @@ class CropService {
   // Get crops by the user
   async getCropsByUser(userId: number) {
     try {
-      // Query crops through the CropJournal (associating crops with the user)
-      const crops = await Crop.findAll({
+      // Query crops through the user-crop relationship
+      const user = await User.findByPk(userId, {
         include: [
           {
-            model: CropJournal,
-            where: { user_id: userId },  // Ensure the crops are related to this user
-            include: [
-              {
-                model: User,  // Include the User to make sure the relationship is valid
-                where: { user_id: userId },  // Make sure it's the correct user
-              },
-            ],
+            model: Crop,
+            through: {
+              attributes: [], // Ignore the 'user_crop' table columns
+            },
           },
         ],
       });
   
-      if (crops.length === 0) {
-        throw new Error('No crops found for this user');
+      if (!user) {
+        throw new Error('User not found');
       }
   
-      return crops[0].crop_name;  // Return the crops associated with the user
+      return user.Crops || [];  // Ensure it always returns an array (even if empty)
     } catch (err) {
       console.error('Error fetching crops for user:', err);
       throw err;
@@ -107,20 +103,17 @@ class CropService {
   //add crop to a user's journal
   async addCropForUser(userId: number, cropId: number) {
     try {
-      // Check if already exists
-      const exists = await CropJournal.findOne({
-        where: { user_id: userId, crop_id: cropId },
-      });
+      const user = await User.findByPk(userId);
+      const crop = await Crop.findByPk(cropId);
   
-      if (!exists) {
-        await CropJournal.create({
-          user_id: userId,
-          crop_id: cropId,
-          notes: '', // or null/default value if optional
-        });
+      if (!user || !crop) {
+        throw new Error('User or Crop not found');
       }
   
-      // Return updated list
+      // Use the 'addCrop' mixin provided by Sequelize
+      await user.addCrop(crop);
+  
+      // Return the updated list of crops
       const updatedCrops = await this.getCropsByUser(userId);
       return updatedCrops;
     } catch (err) {
