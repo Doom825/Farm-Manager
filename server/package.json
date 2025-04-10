@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "start": "npm run build && node dist/server.js --ignore client"
+    "start": "npm run build && node dist/server.js --ignore client",
+    "dev": "npx nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node dist/seeds/index.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,13 @@
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7"
+  }, 
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts,json,js",
+    "exec": "npx tsc && node dist/server.js"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

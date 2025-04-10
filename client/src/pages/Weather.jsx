@@ -33,30 +33,33 @@ const handleCityChange = (e) => {
 
 //page info
     return (
-        <div>
-            <form onSubmit={fetchWeather}>
+        <div className="weather-container">
+            <form onSubmit={fetchWeather} className="weather-form"> 
                 <input
                     type="text"
                     value={city}
                     onChange={handleCityChange}
                     placeholder="Enter a city"
+                    className="city-input"
                     />
                     <button type="submit">Get Weather</button>
             </form>
-            <h2>{weather?.name}</h2>
-            <h3>
-                {weather?.main?.temp
-                    ? celsiusToFahrenheit(weather.main.temp).toFixed(2) + ' °F'
-                    : 'Temperature not available'}
-            </h3>
-
-            <h2>
-                {weather?.wind?.speed
-                    ? `${metersToMph(weather.wind.speed)} mph`
-                    : 'Wind speed not availiable'
-                }
-            </h2>
-            <h2>{weather?.weather?.[0]?.description}</h2>
+            {weather?.name && (
+                <div className="weather-info">
+                    <h1>{weather?.name}</h1>
+                    <h2>
+                        {weather?.main?.temp
+                            ? celsiusToFahrenheit(weather.main.temp).toFixed(2) + ' °F'
+                            : 'Temperature not available'}
+                    </h2>
+                    <h2>
+                        {weather?.wind?.speed
+                            ? `${metersToMph(weather.wind.speed)} mph`
+                            : 'Wind speed not available'}
+                    </h2>
+                    <h2>{weather?.weather?.[0]?.description}</h2>
+                </div>
+            )}
         </div>
     );
 }
