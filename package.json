@@ -4,14 +4,27 @@
   "description": "Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:",
   "main": "index.js",
   "scripts": {
-    "install-all": "npm install && cd server && npm install && cd client && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npm i && npm run seed && npm run build && npm run start:dev",
+    "start": "npm run client:build && npm run server",
+    "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:5000 && npm run client:dev\"",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "client:build": "cd client && npm run build",
+    "client:dev": "cd client && npm run dev",
     "build": "cd client && npm run build",
-    "render-build": "cd client && npm install && npm run build && cd ../server && npm install",
-    "start": "cd server && npm start"
+    "seed": "cd server && npm run seed",
+    "render-build": "npm install && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Doom825/Farm-Manager.git"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.3",
+    "wait-on": "^7.2.0"
   },
   "keywords": [],
   "author": "",
