@@ -7,6 +7,7 @@ dotenv.config();
 import User from './User.js';
 import Crop from './Crop.js';
 import CropJournal from './CropJournal.js';
+import UserCrop from './UserCrop.js';
 
 // Set up associations here
 User.hasMany(CropJournal, {
@@ -43,6 +44,7 @@ const db = {
   User,
   Crop,
   CropJournal,
+  UserCrop,
 };
 
 export default db;

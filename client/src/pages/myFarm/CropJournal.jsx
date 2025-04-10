@@ -48,19 +48,28 @@ const CropJournal = () => {
 
   const handleAddCrop = async (cropName) => {
     try {
-      const response = await fetch(`/api/crops/add/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cropName }), // Send the crop name to be added
-      });
-
-      if (response.ok) {
-        const updatedCrops = await response.json();
-        setCrops(updatedCrops); // Update crops after adding
-        setSearchTerm(''); // Clear search term after adding
-        setSelectedCrop(null); // Clear the selected crop after adding
+      // Fetch the crop_id using the selected cropName
+      const cropResponse = await fetch(`/api/crops/id/${cropName}`);
+      const cropData = await cropResponse.json();
+  
+      // Check if the crop was found
+      if (cropData && cropData.crop_id) {
+        const response = await fetch(`/api/crops/add/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ cropId: cropData.crop_id }), // Send cropId to add to user_crop
+        });
+  
+        if (response.ok) {
+          const updatedCrops = await response.json();
+          setCrops(updatedCrops); // Update crops after adding
+          setSearchTerm(''); // Clear search term after adding
+          setSelectedCrop(null); // Clear the selected crop after adding
+        }
+      } else {
+        console.log('Crop not found in the database');
       }
     } catch (err) {
       console.error('Error adding crop:', err);
