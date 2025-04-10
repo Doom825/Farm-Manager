@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
+import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import { sequelize } from './config/connection.js';
 import cropRoutes from './routes/api/cropRoutes.js';
@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+// Enable CORS before defining routes
+app.use(cors());  // This will allow cross-origin requests
+
+app.use(express.json());
 
 // API routes
 app.use('/api/crops', cropRoutes);

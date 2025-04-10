@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import Crop from '../models/Crop.js';
-import CropJournal from '../models/CropJournal.js'; 
+import db from '../models/index.js';
+const { Crop, CropJournal, User  } = db;
 
 dotenv.config();
 
@@ -77,19 +77,55 @@ class CropService {
   // Get crops by the user
   async getCropsByUser(userId: number) {
     try {
+      // Query crops through the CropJournal (associating crops with the user)
       const crops = await Crop.findAll({
         include: [
           {
             model: CropJournal,
-            where: { user_id: userId },  // Ensure we filter by user
-            required: true,  // Only get crops that are linked to this user
+            where: { user_id: userId },  // Ensure the crops are related to this user
+            include: [
+              {
+                model: User,  // Include the User to make sure the relationship is valid
+                where: { user_id: userId },  // Make sure it's the correct user
+              },
+            ],
           },
         ],
       });
-      return crops;
-    } catch (error) {
-      console.error('Error fetching crops by user:', error);
-      throw error;
+  
+      if (crops.length === 0) {
+        throw new Error('No crops found for this user');
+      }
+  
+      return crops[0].crop_name;  // Return the crops associated with the user
+    } catch (err) {
+      console.error('Error fetching crops for user:', err);
+      throw err;
+    }
+  }
+  
+  //add crop to a user's journal
+  async addCropForUser(userId: number, cropId: number) {
+    try {
+      // Check if already exists
+      const exists = await CropJournal.findOne({
+        where: { user_id: userId, crop_id: cropId },
+      });
+  
+      if (!exists) {
+        await CropJournal.create({
+          user_id: userId,
+          crop_id: cropId,
+          notes: '', // or null/default value if optional
+        });
+      }
+  
+      // Return updated list
+      const updatedCrops = await this.getCropsByUser(userId);
+      return updatedCrops;
+    } catch (err) {
+      console.error('Error adding crop for user:', err);
+      throw err;
     }
   }
 }

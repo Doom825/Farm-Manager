@@ -1,57 +1,69 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import {
+    Model,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    CreationOptional,
+} from 'sequelize';
 import { sequelize } from '../config/connection.js';
-import CropJournal from "./CropJournal.js";
+import bcrypt from 'bcrypt';
 
-// interfaces to create user table/db 
-interface UserAttributes {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
+class User extends Model<
+    InferAttributes<User>,
+    InferCreationAttributes<User>
+> {
+    declare user_id: CreationOptional<number>;
+    declare user_name: string;
+    declare email: string;
+    declare user_password: string;
+
+    //method to check password
+    async checkPassword(password: string): Promise<boolean> {
+        return await bcrypt.compare(password, this.user_password);
+    }
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
-
-// More info on https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/ 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-    public id!: number;
-    public username!: string;
-    public email!: string;
-    public password!: string;
-}
-
-// Validation for each category: id, username, email, and password. This initialize the User.
 User.init(
     {
-        id: {
+        user_id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        username: {
+        user_name: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
         },
         email: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+            validate: {
+                isEmail: true,
+            },
         },
-        password: {
+        user_password: {
             type: DataTypes.STRING,
             allowNull: false,
         },
     },
     {
         sequelize,
-        tableName: 'users',
         modelName: 'User',
+        tableName: 'users',
+        timestamps: false, // Disable Sequelize's automatic createdAt and updatedAt
+        hooks: {
+            // ✅ Automatically hash password before save
+            beforeCreate: async (user: User) => {
+                user.user_password = await bcrypt.hash(user.user_password, 10);
+            },
+            beforeUpdate: async (user: User) => {
+                if (user.changed('user_password')) {
+                    user.user_password = await bcrypt.hash(user.user_password, 10);
+                }
+            },
+        },
     }
 );
-
-// Associations
-User.hasMany(CropJournal, { foreignKey: 'user_id' });
-CropJournal.belongsTo(User, { foreignKey: 'user_id' });
 
 export default User;

@@ -10,9 +10,11 @@ const LogIn = () => {
         try {
             const data = await logInUser(email, password);
             localStorage.setItem('token', data.token);
+            const payload = JSON.parse(atob(data.token.split('.')[1]));
+            localStorage.setItem('user_id', payload.user_id);
             alert('Welcome back, Farmer!');
         } catch (error) {
-            alert(error);
+            alert(error?.response?.data?.message || 'Login failed');
         }
     };
 

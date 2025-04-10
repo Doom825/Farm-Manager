@@ -27,12 +27,34 @@ router.get('/', async (_req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     // Convert the userId from string to number
-    const userId = parseInt(req.params.userId, 10); 
+    const userId = parseInt(req.params.userId, 10);
     const crops = await cropService.getCropsByUser(userId);
-    res.json(crops);
+    
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid userId' });
+    }
+
+    if (crops.length === 0) {
+      return res.status(404).json({ message: 'No crops found for this user' });
+    }
+    
+    return res.json(crops);  // Ensure this line returns a response
   } catch (error) {
     console.error('Error fetching crops:', error);
-    res.status(500).json({ error: 'Failed to fetch crops for this user.' });
+    return res.status(500).json({ error: 'Failed to fetch crops for this user.' });
+  }
+});
+
+router.post('/add/:userId', async (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+  const { cropId } = req.body;
+
+  try {
+    const updatedCrops = await cropService.addCropForUser(userId, cropId);
+    res.json(updatedCrops);
+  } catch (error) {
+    console.error('Error adding crop for user:', error);
+    res.status(500).json({ error: 'Failed to add crop for this user.' });
   }
 });
 

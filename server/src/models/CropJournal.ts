@@ -7,20 +7,27 @@ interface CropJournalAttributes {
   id: number;
   user_id: number;
   crop_id: number;
-  notes: string;  // You can store notes or other details about the crop here
-  date_planted: Date;
-  last_watered: Date;
+  body: string;  // You can store body or other details about the crop here
+  entry_date: Date;
+  //last_watered: Date;
 }
 
-type CropJournalCreationAttributes = CropJournalAttributes;
+type CropJournalCreationAttributes = Omit<
+  CropJournalAttributes,
+  'id' | 'entry_date' | 'last_watered' | 'body'
+> & {
+  entry_date?: Date;
+  //last_watered?: Date;
+  notes?: string;
+};
 
 class CropJournal extends Model<CropJournalAttributes, CropJournalCreationAttributes> implements CropJournalAttributes {
   public id!: number;
   public user_id!: number;
   public crop_id!: number;
-  public notes!: string;
-  public date_planted!: Date;
-  public last_watered!: Date;
+  public body!: string;
+  public entry_date!: Date;
+  //public last_watered!: Date;
 }
 
 CropJournal.init(
@@ -34,7 +41,7 @@ CropJournal.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: User,  // Make sure this matches the name of your User model
+        model: User,
         key: 'id',
       },
       onDelete: 'CASCADE',
@@ -43,29 +50,29 @@ CropJournal.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Crop,  // Ensure this matches the name of your Crop model
+        model: Crop, 
         key: 'crop_id',
       },
       onDelete: 'CASCADE',
     },
-    notes: {
+    body: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    date_planted: {
+    entry_date: {
       type: DataTypes.DATE,
       allowNull: true,
     },
-    last_watered: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+    // last_watered: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true,
+    // },
   },
   {
     sequelize,
-    tableName: 'cropjournal',
+    tableName: 'user_crop',
     modelName: 'CropJournal',
-    timestamps: true,  // This will automatically create createdAt and updatedAt fields
+    timestamps: false,  
   }
 );
 
