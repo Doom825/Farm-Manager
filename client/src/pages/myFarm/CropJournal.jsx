@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
 const CropJournal = () => {
-  const [crops, setCrops] = useState([]);
+  const [crops, setCrops] = useState([]); // List of user's crops
   const [searchTerm, setSearchTerm] = useState('');
-  const [allCrops, setAllCrops] = useState([]);
-  const [userId, setUserId] = useState(null); // Use useState to store userId
+  const [allCrops, setAllCrops] = useState([]); // List of all available crops
+  const [userId, setUserId] = useState(null);
+  const [selectedCrop, setSelectedCrop] = useState(null); // State to store selected crop
 
   useEffect(() => {
     // Fetch userId from localStorage
     const storedUserId = localStorage.getItem('user_id');
     if (storedUserId) {
-      setUserId(storedUserId); // Update the state if user_id exists
+      setUserId(storedUserId); // Set userId if found in localStorage
     } else {
       console.log('No user_id found in localStorage');
     }
   }, []);
 
   useEffect(() => {
-    // Only fetch crops if userId is available
     if (userId) {
       const fetchCrops = async () => {
         try {
-          console.log(`Fetching crops for user ID: ${userId}`); // Check if the userId is correct
+          console.log(`Fetching crops for user ID: ${userId}`);
           const response = await fetch(`/api/crops/user/${userId}`);
           const data = await response.json();
           setCrops(data);
@@ -32,9 +32,10 @@ const CropJournal = () => {
 
       const fetchAllCrops = async () => {
         try {
-          const response = await fetch('/api/crops'); // Gets all crops
+          const response = await fetch('/api/crops/all'); // Fetch all crop names
           const data = await response.json();
-          setAllCrops(data);
+          console.log('All Crops:', data); // Check what data is returned
+          setAllCrops(data); // Set the state with the fetched crop names
         } catch (error) {
           console.error('Error fetching all crops:', error);
         }
@@ -43,23 +44,23 @@ const CropJournal = () => {
       fetchCrops();
       fetchAllCrops();
     }
-  }, [userId]); // Fetch crops only when userId is available
+  }, [userId]);
 
-  const handleAddCrop = async (cropId) => {
+  const handleAddCrop = async (cropName) => {
     try {
       const response = await fetch(`/api/crops/add/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cropId }),
+        body: JSON.stringify({ cropName }), // Send the crop name to be added
       });
 
       if (response.ok) {
-        // Refresh the crops list
         const updatedCrops = await response.json();
-        setCrops(updatedCrops);
-        setSearchTerm('');
+        setCrops(updatedCrops); // Update crops after adding
+        setSearchTerm(''); // Clear search term after adding
+        setSelectedCrop(null); // Clear the selected crop after adding
       }
     } catch (err) {
       console.error('Error adding crop:', err);
@@ -67,8 +68,13 @@ const CropJournal = () => {
   };
 
   const matchingCrops = allCrops.filter(crop =>
-    crop.crop_name.toLowerCase().includes(searchTerm.toLowerCase())
+    crop.toLowerCase().includes(searchTerm.toLowerCase()) // Search logic based on crop name
   );
+
+  const handleSelectCrop = (crop) => {
+    setSelectedCrop(crop);
+    setSearchTerm(''); // Clear search field when crop is selected
+  };
 
   return (
     <div>
@@ -89,19 +95,30 @@ const CropJournal = () => {
       <input
         id="cropSearch"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)} // Handle search term input
         placeholder="Search crops..."
       />
 
       {searchTerm && (
         <ul>
-          {matchingCrops.map((crop) => (
-            <li key={crop.crop_id}>
-              {crop.crop_name}
-              <button onClick={() => handleAddCrop(crop.crop_id)}>Add</button>
-            </li>
-          ))}
+          {matchingCrops.length > 0 ? (
+            matchingCrops.map((crop, index) => (
+              <li key={index} onClick={() => handleSelectCrop(crop)}>
+                <span style={{ cursor: 'pointer' }}>{crop}</span> {/* Crop name is now clickable */}
+              </li>
+            ))
+          ) : (
+            <li>No crops found matching your search.</li>
+          )}
         </ul>
+      )}
+
+      {/* Only display "Add" button when a crop is selected */}
+      {selectedCrop && (
+        <div>
+          <p>Selected Crop: {selectedCrop}</p>
+          <button onClick={() => handleAddCrop(selectedCrop)}>Add</button>
+        </div>
       )}
     </div>
   );

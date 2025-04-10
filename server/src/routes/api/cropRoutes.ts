@@ -45,6 +45,17 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+//route to grab all crop names from crops table
+router.get('/all', async (_req, res) => {
+  try {
+    const cropNames = await cropService.getAllCropNames();
+    res.json(cropNames); // Return the list of crop names as a JSON array
+  } catch (error) {
+    console.error('Error fetching all crop names:', error);
+    res.status(500).send('Error fetching crop names');
+  }
+});
+
 router.post('/add/:userId', async (req, res) => {
   const userId = parseInt(req.params.userId, 10);
   const { cropId } = req.body;
