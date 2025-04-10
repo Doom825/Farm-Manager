@@ -32,7 +32,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/farm" element={<Farm />} />
-        <Route path="/farm/journal" element={< Journal />} />
+        <Route path="/farm/journal" element={<Journal userId={localStorage.getItem('user_id')} />}/>
         <Route path="/weather" element={<Weather />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />

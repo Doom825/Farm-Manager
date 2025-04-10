@@ -33,6 +33,7 @@
     "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an override modifier. */,
     "useUnknownInCatchVariables": true /* Ensure 'unknown' is used for catch clause variables. */,
     "skipLibCheck": true/**/,
+    "typeRoots": ["node_modules/@types", "src/types"],
   },
   "include": ["src", "tsconfig.json"]
 }

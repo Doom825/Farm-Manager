@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../../models/User';
+import db from '../../models/index.js';
+
+const { User } = db;
 
 const router = Router();
 

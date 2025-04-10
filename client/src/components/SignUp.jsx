@@ -8,7 +8,15 @@ const SignUp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try { 
+
+        // Basic email validation before submitting
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        try {
             const data = await signUpUser(username, email, password);
             console.log("Sign up success:", data);
             alert(data.message || "Sign up successful!");
@@ -20,19 +28,19 @@ const SignUp = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input 
+            <input
                 type="text"
-                placeholder='Username'
+                placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
             />
             <input
-               type="email" 
-               placeholder='Email'
-               value={email}
-               onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder='Email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
             />
-            <input 
+            <input
                 type="password"
                 placeholder='Password'
                 value={password}
