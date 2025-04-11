@@ -16,6 +16,7 @@ app.use(cors());  // This will allow cross-origin requests
 
 app.use(express.json());
 
+app.use(express.static('../client/dist'));
 // API routes
 app.use('/api/crops', cropRoutes);
 app.use('/api/auth', authRoutes);
