@@ -19,7 +19,7 @@
 }
 
 body {
-  background-image: url('assets/CornField.png');
+  background-image: url('/CornField.png');
   background-size: cover; 
 }
 
