@@ -31,7 +31,7 @@ You can use our Farm Management by setting your current crops. Then, you can enj
 Colton Ambrose https://github.com/Ctbambrose, Calvin Mark Taylor III  https://github.com/Doom825/, Jeremiah Falk https://github.com/jedfalk, Ivelis Becker https://www.github.com/I-0110
 
 - Third Party(ies):
-
+     All of the contributors on https://permapeople.org/  that is a small community that has worked together not only help people improve their crop growth, but also to help get as the data accessible to all.
 
 - Tutorial(s) used: 
 
